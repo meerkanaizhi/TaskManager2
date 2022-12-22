@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import kg.geektech.taskmanager.App
 import kg.geektech.taskmanager.R
 import kg.geektech.taskmanager.databinding.FragmentHomeBinding
 import kg.geektech.taskmanager.model.Task
@@ -42,12 +43,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = TaskAdapter()
         binding.recyclerView.adapter = adapter
-
-         setFragmentResultListener("rq_task") { key, bundle ->
-        val data: Task = bundle.getSerializable("task") as Task
+        val data = App.db.dao().getAll()
         adapter.addTask(data)
-    }
-
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.taskFragment)
         }

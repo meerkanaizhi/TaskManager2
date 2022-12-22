@@ -19,6 +19,11 @@ class TaskAdapter (): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
         data.add(0, task)
         notifyItemChanged(0)
     }
+    fun addTask(newData:List<Task>){
+        data.clear()
+        data.addAll(newData)
+        notifyDataSetChanged()
+    }
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(data.get(position))
     }
