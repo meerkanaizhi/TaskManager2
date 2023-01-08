@@ -1,5 +1,8 @@
 package kg.geektech.taskmanager.ui.home
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyCharacterMap
 import android.view.LayoutInflater
@@ -26,7 +29,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = TaskAdapter()
+        adapter = TaskAdapter(this::onLongClick)
     }
 
     override fun onCreateView(
@@ -41,13 +44,39 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = TaskAdapter()
+
         binding.recyclerView.adapter = adapter
-        val data = App.db.dao().getAll()
-        adapter.addTask(data)
+        setData()
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.taskFragment)
         }
+    }
+
+     private fun setData(){
+
+         val data = App.db.dao().getAll()
+         adapter.addTask(data)
+    }
+    private fun onLongClick(task: Task) {
+
+        val alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.setTitle("Delete?")
+        alertDialog.setNegativeButton("No", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, position: Int) {
+                dialog?.cancel()
+
+            }
+        })
+        alertDialog.setPositiveButton("Yes", object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, position: Int) {
+                dialog?.cancel()
+
+                App.db.dao().delete(task)
+                setData()
+
+            }
+        })
+        alertDialog.create().show()
     }
     override fun onDestroyView() {
         super.onDestroyView()
