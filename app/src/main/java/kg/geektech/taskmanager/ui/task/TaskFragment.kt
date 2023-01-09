@@ -14,10 +14,11 @@ import kg.geektech.taskmanager.R
 import kg.geektech.taskmanager.databinding.ActivityMainBinding
 import kg.geektech.taskmanager.databinding.FragmentTaskBinding
 import kg.geektech.taskmanager.model.Task
+import kg.geektech.taskmanager.ui.home.HomeFragment
 
 class TaskFragment : Fragment() {
     private lateinit var binding: FragmentTaskBinding
-
+    private var task:Task?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,8 +29,20 @@ class TaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        task = arguments?.getSerializable(HomeFragment.KEY_FOR_TASK)as Task?
+        if (task==null){
+            binding.btnSave.text = getString(R.string.save)
+        }else{
+            binding.etTitle.setText(task?.title.toString())
+            binding.etDesc.setText(task?.desc.toString())
+            binding.btnSave.text = getString(R.string.update)
+        }
         binding.btnSave.setOnClickListener {
-            save()
+            if (task==null){
+                save()
+            }else{
+                update()
+            }
         }
         }
     private fun save (){
@@ -41,6 +54,11 @@ class TaskFragment : Fragment() {
         App.db.dao().insert(data)
         findNavController().navigateUp()
     }
-
+    private fun update (){
+        task?.title=binding.etTitle.text.toString()
+        task?.desc=binding.etDesc.text.toString()
+        task?.let { App.db.dao().update(it) }
+        findNavController().navigateUp()
+    }
 
 }

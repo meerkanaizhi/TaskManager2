@@ -1,7 +1,7 @@
 package kg.geektech.taskmanager.model
 
 class OnBoard (
-    var image: String?=null,
+    var image: Int,
     var titles: String?=null,
 
 )

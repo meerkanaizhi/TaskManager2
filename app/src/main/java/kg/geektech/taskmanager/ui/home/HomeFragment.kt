@@ -8,6 +8,7 @@ import android.view.KeyCharacterMap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -23,13 +24,14 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var adapter: TaskAdapter
 
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = TaskAdapter(this::onLongClick)
+        adapter = TaskAdapter(this::onLongClick,this:: onClick)
     }
 
     override fun onCreateView(
@@ -57,6 +59,11 @@ class HomeFragment : Fragment() {
          val data = App.db.dao().getAll()
          adapter.addTask(data)
     }
+    private fun onClick(task: Task){
+        findNavController().navigate(R.id.taskFragment, bundleOf(KEY_FOR_TASK to task ))
+
+
+    }
     private fun onLongClick(task: Task) {
 
         val alertDialog = AlertDialog.Builder(requireContext())
@@ -77,6 +84,9 @@ class HomeFragment : Fragment() {
             }
         })
         alertDialog.create().show()
+    }
+    companion object{
+        const val KEY_FOR_TASK="task"
     }
     override fun onDestroyView() {
         super.onDestroyView()
