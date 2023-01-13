@@ -38,6 +38,11 @@
         android:name="kg.geektech.taskmanager.ui.onBoarding.OnBoardingFragment"
         android:label="fragment_on_boarding"
         tools:layout="@layout/fragment_on_boarding" />
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="kg.geektech.taskmanager.ui.auth.AuthFragment"
+        android:label="fragment_auth"
+        tools:layout="@layout/fragment_auth" />
 
 
 </navigation>
